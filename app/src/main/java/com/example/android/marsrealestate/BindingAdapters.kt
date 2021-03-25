@@ -20,8 +20,11 @@ package com.example.android.marsrealestate
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.android.marsrealestate.network.MarsProperty
+import com.example.android.marsrealestate.overview.PhotoGridAdapter
 
 // The @BindingAdapter annotation tells data binding that you want this binding adapter executed
 // when an XML item has the imageUrl attribute
@@ -42,4 +45,15 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
                 .apply(options)
                 .into(imgView)
     }
+}
+
+// initialize the PhotoGridAdapter with the list of MarsProperty objects. Using a BindingAdapter to
+// set the RecyclerView data causes data binding to automatically observe the LiveData for the list
+// of MarsProperty objects. Then the binding adapter is called automatically when the MarsProperty
+// list changes.
+@BindingAdapter("listData")
+fun bindRecyclerView(recyclerView: RecyclerView, data: List<MarsProperty>?) {
+    val adapter = recyclerView.adapter as PhotoGridAdapter
+    // tell the RecyclerView when a new list is available
+    adapter.submitList(data)
 }
