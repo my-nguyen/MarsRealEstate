@@ -25,15 +25,16 @@ import com.example.android.marsrealestate.network.MarsApi
 import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.launch
 
+enum class MarsApiStatus { LOADING, ERROR, DONE }
+
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
 class OverviewViewModel : ViewModel() {
 
-    // the most recent response
-    private val _response = MutableLiveData<String>()
-    val response: LiveData<String>
-        get() = _response
+    private val _status = MutableLiveData<MarsApiStatus>()
+    val status: LiveData<MarsApiStatus>
+        get() = _status
 
     private val _properties = MutableLiveData<List<MarsProperty>>()
     val properties: LiveData<List<MarsProperty>>
@@ -49,12 +50,16 @@ class OverviewViewModel : ViewModel() {
         // A ViewModelScope is the built-in coroutine scope defined for each ViewModel in your app.
         // Any coroutine launched in this scope is automatically canceled if the ViewModel is cleared
         viewModelScope.launch {
+            // the initial status while the coroutine is running and you're waiting for data
+            _status.value = MarsApiStatus.LOADING
             try {
                 // this creates and starts the network call on a background thread.
                 _properties.value = MarsApi.retrofitService.getProperties()
-                _response.value = "Success: Mars properties retrieved"
+                _status.value = MarsApiStatus.DONE
             } catch (e: Exception) {
-                _response.value = "Failure: ${e.message}"
+                _status.value = MarsApiStatus.ERROR
+                // set the _properties LiveData to an empty list, to clear the RecyclerView.
+                _properties.value = ArrayList()
             }
         }
     }

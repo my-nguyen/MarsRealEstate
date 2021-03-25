@@ -17,6 +17,7 @@
 
 package com.example.android.marsrealestate
 
+import android.view.View
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.android.marsrealestate.network.MarsProperty
+import com.example.android.marsrealestate.overview.MarsApiStatus
 import com.example.android.marsrealestate.overview.PhotoGridAdapter
 
 // The @BindingAdapter annotation tells data binding that you want this binding adapter executed
@@ -56,4 +58,26 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<MarsProperty>?) {
     val adapter = recyclerView.adapter as PhotoGridAdapter
     // tell the RecyclerView when a new list is available
     adapter.submitList(data)
+}
+
+@BindingAdapter("marsApiStatus")
+fun bindStatus(statusImageView: ImageView, status: MarsApiStatus?) {
+    when (status) {
+        MarsApiStatus.LOADING -> {
+            // set the ImageView to visible
+            statusImageView.visibility = View.VISIBLE
+            // assign it the loading animation
+            statusImageView.setImageResource(R.drawable.loading_animation)
+        }
+        MarsApiStatus.ERROR -> {
+            // set the status ImageView to visible
+            statusImageView.visibility = View.VISIBLE
+            // reuse the connection-error drawable
+            statusImageView.setImageResource(R.drawable.ic_connection_error)
+        }
+        MarsApiStatus.DONE -> {
+            // turn off the visibility of the status ImageView to hide it
+            statusImageView.visibility = View.GONE
+        }
+    }
 }
