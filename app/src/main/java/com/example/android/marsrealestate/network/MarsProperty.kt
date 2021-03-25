@@ -17,7 +17,13 @@
 
 package com.example.android.marsrealestate.network
 
-data class MarsProperty(val id: String, val img_src: String, val type: String, val price: Double) {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+// The @Parcelize annotation uses the Kotlin Android extensions to automatically implement
+// the methods in the Parcelable interface for this class
+@Parcelize
+data class MarsProperty(val id: String, val img_src: String, val type: String, val price: Double): Parcelable {
     val isRental
         get() = type == "rent"
 }

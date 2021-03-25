@@ -41,6 +41,12 @@ class OverviewViewModel : ViewModel() {
     val properties: LiveData<List<MarsProperty>>
         get() = _properties
 
+    // When this LiveData changes to non-null (When the user taps a photo in the overview model),
+    // it should trigger navigation to a fragment that shows details about the clicked item
+    private val _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
+    val navigateToSelectedProperty: LiveData<MarsProperty>
+        get() = _navigateToSelectedProperty
+
     // Call getMarsRealEstateProperties() on init so we can display status immediately.
     init {
         // show all properties when the app first loads
@@ -49,6 +55,16 @@ class OverviewViewModel : ViewModel() {
 
     fun updateFilter(filter: MarsApiFilter) {
         getMarsRealEstateProperties(filter)
+    }
+
+    fun displayPropertyDetails(marsProperty: MarsProperty) {
+        _navigateToSelectedProperty.value = marsProperty
+    }
+
+    // need this to mark the navigation state to complete, and to avoid the navigation being
+    // triggered again when the user returns from the detail view
+    fun displayPropertyDetailsComplete() {
+        _navigateToSelectedProperty.value = null
     }
 
     // Sets the value of the status LiveData to the Mars API status.

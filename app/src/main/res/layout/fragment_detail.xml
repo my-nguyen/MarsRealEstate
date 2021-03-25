@@ -21,6 +21,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.android.marsrealestate.detail.DetailViewModel" />
+    </data>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,6 +37,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
+            <!-- The binding adapter that loads an image using Glide will automatically be used here
+                 as well, because that adapter watches all app:imageUrl attributes -->
             <ImageView
                 android:id="@+id/main_photo_image"
                 android:layout_width="0dp"
@@ -39,6 +47,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:imageUrl="@{viewModel.selectedProperty.img_src}"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <TextView
